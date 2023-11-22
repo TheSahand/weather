@@ -31,11 +31,12 @@ class _HomeScreenState extends State<HomeScreen> {
   List<SevenDaysWeather>? sevenDaysWeather;
   List<SevenHoursWeather>? sevenHoursWeather;
   String? cityName;
-  String myId = 'Your key';
+  String myId = '27e4790b473cf9e8ad44f29223be3ca9';
   List<SearchWeather>? searchWeather;
   double? latitude;
   double? longitude;
   bool showLoading = false;
+
   @override
   void initState() {
     currentWeather = widget.currentWeather;
@@ -524,18 +525,15 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       showLoading = true;
     });
+
     var response = await Dio().get(
         'http://api.openweathermap.org/geo/1.0/direct?q=$cityName&limit=5&appid=$myId');
     List<SearchWeather> searchWeatherList = response.data
         .map<SearchWeather>((json) => SearchWeather.fromJsonMap(json))
         .toList();
-    try {} catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.toString())));
-    }
-
     setState(() {
       searchWeather = searchWeatherList;
+
       showLoading = false;
     });
 

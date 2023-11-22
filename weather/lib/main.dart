@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:weather/model/save_loc.dart';
 import 'package:weather/screens/permission_screen.dart';
 
-void main() {
+void main() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(SaveLocAdapter());
+  await Hive.openBox<SaveLoc>('LocationBox');
   runApp(const MyApp());
 }
 

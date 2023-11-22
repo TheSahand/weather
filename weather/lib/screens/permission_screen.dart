@@ -2,7 +2,9 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:weather/model/save_loc.dart';
 import 'package:weather/screens/splash_screen.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class PermissionScreen extends StatefulWidget {
   const PermissionScreen({super.key});
@@ -15,6 +17,7 @@ class _PermissionScreenState extends State<PermissionScreen> {
   Position? _currentPosition;
   bool showLoading = false;
   bool hideButton = true;
+  var LocBox = Hive.box<SaveLoc>('LocationBox');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,6 +90,7 @@ class _PermissionScreenState extends State<PermissionScreen> {
       setState(() {
         _currentPosition = position;
       });
+      saveLoc(_currentPosition!.latitude, _currentPosition!.longitude);
     }).catchError((e) {
       debugPrint(e);
     });
@@ -154,5 +158,10 @@ class _PermissionScreenState extends State<PermissionScreen> {
         ),
       ],
     );
+  }
+
+  void saveLoc(double lat, double lon) {
+    var location = SaveLoc(lat, lon);
+    LocBox.put(1, location);
   }
 }

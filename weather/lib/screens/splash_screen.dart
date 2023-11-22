@@ -2,10 +2,12 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:weather/data/current_weather.dart';
 import 'package:weather/data/seven_days_weather.dart';
 import 'package:weather/data/seven_hours_weather.dart';
+import 'package:weather/model/save_loc.dart';
 import 'package:weather/screens/home_screen.dart';
 
 // ignore: must_be_immutable
@@ -21,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Position? currentPosition;
   String myId = '27e4790b473cf9e8ad44f29223be3ca9';
   bool showLoading = false;
-
+  var LocBox = Hive.box<SaveLoc>('LocationBox');
   @override
   void initState() {
     currentPosition = widget.currentPosition;
@@ -102,20 +104,22 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void getData() async {
     try {
+      double lat = LocBox.get(1)!.lat;
+      double lon = LocBox.get(1)!.lon;
       var currentResponse = await Dio().get(
-          'https://api.openweathermap.org/data/2.5/weather?lat=${currentPosition?.latitude}&lon=${currentPosition?.longitude}&appid=$myId&units=metric');
+          'https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=$myId&units=metric');
 
       var currentWeather = CurrentWeather.fromMapJson(currentResponse.data);
 
       var sevenDaysResponse = await Dio().get(
-          'https://api.openweathermap.org/data/2.5/onecall?lat=${currentPosition?.latitude}&lon=${currentPosition?.longitude}&appid=$myId&units=metric');
+          'https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&appid=$myId&units=metric');
 
       List<SevenDaysWeather> sevenDaysWeather = sevenDaysResponse.data['daily']
           .map<SevenDaysWeather>((json) => SevenDaysWeather.fromJsonMap(json))
           .toList();
 
       var sevenHoursResponse = await Dio().get(
-          'https://api.openweathermap.org/data/2.5/onecall?lat=${currentPosition?.latitude}&lon=${currentPosition?.longitude}&appid=$myId&units=metric');
+          'https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&appid=$myId&units=metric');
       List<SevenHoursWeather> sevenHoursWeather = sevenHoursResponse
           .data['hourly']
           .map<SevenHoursWeather>((json) => SevenHoursWeather.fromJsonMap(json))
@@ -131,8 +135,7 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
           ));
     } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.toString())));
+      print(e.toString());
     }
   }
 }
