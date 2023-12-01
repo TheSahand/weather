@@ -21,7 +21,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   Position? currentPosition;
-  String myId = '27e4790b473cf9e8ad44f29223be3ca9';
+  String myId = 'Your Key';
   bool showLoading = false;
   var LocBox = Hive.box<SaveLoc>('LocationBox');
   @override

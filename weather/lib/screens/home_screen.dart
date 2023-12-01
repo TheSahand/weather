@@ -31,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<SevenDaysWeather>? sevenDaysWeather;
   List<SevenHoursWeather>? sevenHoursWeather;
   String? cityName;
-  String myId = '27e4790b473cf9e8ad44f29223be3ca9';
+  String myId = 'Your key';
   List<SearchWeather>? searchWeather;
   double? latitude;
   double? longitude;
