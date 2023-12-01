@@ -12,8 +12,8 @@ import 'package:weather/screens/home_screen.dart';
 
 // ignore: must_be_immutable
 class SplashScreen extends StatefulWidget {
-  SplashScreen({super.key, required this.currentPosition});
-  Position currentPosition;
+  SplashScreen({super.key, this.currentPosition});
+  Position? currentPosition;
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -27,6 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     currentPosition = widget.currentPosition;
+    showLoading = true;
     getData();
     super.initState();
   }
@@ -62,7 +63,9 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget connected(String type) {
     return Visibility(
       visible: showLoading,
-      child: LoadingAnimationWidget.newtonCradle(color: Colors.black, size: 70),
+      child: Center(
+          child: LoadingAnimationWidget.newtonCradle(
+              color: Colors.black, size: 70)),
     );
   }
 
@@ -134,6 +137,7 @@ class _SplashScreenState extends State<SplashScreen> {
               sevenHoursWeather: sevenHoursWeather,
             ),
           ));
+      showLoading = false;
     } catch (e) {
       print(e.toString());
     }

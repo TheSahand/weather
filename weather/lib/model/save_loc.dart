@@ -3,7 +3,7 @@ import 'package:hive/hive.dart';
 part 'save_loc.g.dart';
 
 @HiveType(typeId: 1)
-class SaveLoc {
+class SaveLoc extends HiveObject {
   @HiveField(1)
   double lat;
   @HiveField(2)
